@@ -6,6 +6,7 @@ mod dyn_fn;
 
 fn take_fn<F, Params>(f: F, context: &Context) where F: DynFn<Params> {
     f.call_with_context(context);
+    f.call_with_context(context);
 }
 
 fn test(i: &&'static str, i2: &i32, i3: &u8) {
@@ -18,4 +19,5 @@ fn main() {
     context.put("oufi");
     context.put(9u8);
     take_fn(|a: &&'static str| {println!("{a}")}, &context);
+    take_fn(test, &context);
 }
