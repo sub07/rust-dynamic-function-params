@@ -7,3 +7,4 @@ edition = "2021"
 
 [dependencies]
 rust_utils = { git = "https://github.com/sub07/rust-utils" }
+paste = "1.0"

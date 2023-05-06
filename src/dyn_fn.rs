@@ -1,16 +1,26 @@
+use std::any::Any;
+use std::cell::RefCell;
 
-use crate::context::Context;
+use crate::context::ContextData;
 
-pub trait DynFn<Params> {
-    fn call_with_context(&self, context: &Context);
+pub trait DynFn<Types> {
+    fn call_with_context(&self, context: &mut ContextData);
 }
 
 macro_rules! make_dyn_fn {
     ($($type_gen:ident)*) => {
-        impl <F, $($type_gen: std::any::Any),*> DynFn<($(&$type_gen,)*)> for F where F: Fn($(&$type_gen,)*) {
-            #![allow(unused_variables)]
-            fn call_with_context(&self, context: &crate::Context) {
-                self($(&**context.get::<$type_gen>().borrow(),)*);
+        paste::paste! {
+            impl<F, $($type_gen),*> DynFn<($($type_gen,)*)> for F
+            where
+                F: Fn($(&RefCell<$type_gen>),*),
+                $($type_gen: Any),*
+            {
+                #![allow(unused_variables, non_snake_case)]
+                fn call_with_context(&self, context: &mut crate::ContextData) {
+                    $(let [<box_ $type_gen>] = context.get();)*
+                    self($([<box_ $type_gen>].as_ref()),*);
+                    $(context.put_back([<box_ $type_gen>]);)*
+                }
             }
         }
     };
