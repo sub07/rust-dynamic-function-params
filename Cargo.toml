@@ -6,5 +6,5 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-rust_utils = { git = "https://github.com/sub07/rust-utils" }
-paste = "1.0"
+#rust_utils = { git = "https://github.com/sub07/rust-utils" }
+rust_utils_macro = { git = "https://github.com/sub07/rust-utils" }
